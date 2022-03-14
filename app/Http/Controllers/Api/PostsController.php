@@ -9,34 +9,21 @@ class PostsController extends Controller
 {
     public function listar()
     {
-        $posts = \App\Post::all();
+        $posts = \App\Post::where('published', true)->get();
 
-        $collection = collect();
         foreach ($posts as $post) {
-
-            $tags = \DB::table('tag_post')->where('post_id', '=', $post->id)
-                ->join('tags', 'tag_post.tag_id', '=', 'tags.id')
-                ->get();
-
-            $post->tags = $tags->pluck('name');
-            $collection->push($post);
+            $post->tags;
+            $post->date = $post->created_at->diffForHumans();
         }
 
-        return $collection;
+        return $posts;
     }
 
     public function apenas($id)
     {
-        $post = \DB::table('posts')
-            ->where('posts.id', '=', $id)
-            ->join('tag_post', 'post_id', '=', 'posts.id')
-            ->first();
+        $post = \App\Post::find($id);
 
-        $tags = \DB::table('tag_post')->where('post_id', '=', $post->id)
-            ->join('tags', 'tag_post.tag_id', '=', 'tags.id')
-            ->get();
-
-        $post->tags = $tags->pluck('name');
+        $post->tags;
 
         return response()->json($post);
     }

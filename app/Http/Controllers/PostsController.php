@@ -22,8 +22,9 @@ class PostsController extends Controller
     public function listar()
     {
         $posts = \App\Post::all();
+        $tags = \App\Tag::all();
 
-        return view('posts.index', ['posts' => $posts]);
+        return view('posts.index', ['posts' => $posts, 'tags' => $tags]);
     }
 
     /**
@@ -46,25 +47,27 @@ class PostsController extends Controller
     {
         $this->validate($request, [
             'title' => 'required',
-            'body' => 'required'
+            'body' => 'required',
         ]);
 
-        $creator = \Auth::user()->name;
+        $publish = false;
 
-        $post = new Post;
-        $post->title = $request->title;
-        $post->body = $request->body;
-        $post->creator = $creator;
-        
-        if(\Auth::user()->id == 1){
-            $post->published = true;
-        }else{
-            $post->published = false;
+        if($request->creator_id == 1){
+            $publish = true;
         }
 
-        $post->save();
+        \DB::transaction(function () use($request, $publish) {
 
-        $post->tags()->syncWithoutDetaching($request->tags);
+            $post = Post::create([
+                'title' => $request->title,
+                'body' => $request->body,
+                'creator' => $request->creator,
+                'published' => $publish,
+            ]);
+
+            $post->tags()->syncWithoutDetaching($request->tags);
+        
+        });
 
         return redirect('posts');
     }
@@ -75,10 +78,8 @@ class PostsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function editar($id)
+    public function editar(Post $post)
     {
-        $post = \App\Post::find($id);
-
         return view('posts.edit', ['post' => $post]);
     }
 
@@ -89,28 +90,30 @@ class PostsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function atualizar(Request $request, $id)
+    public function atualizar(Request $request, Post $post)
     {
         $this->validate($request, [
             'title' => 'required',
             'body' => 'required'
         ]);
 
-        $publish = "0";
+        $publish = false;
 
         if($request->publish!=null){
-            $publish = "1";
+            $publish = true;
         }
 
-        $post = \App\Post::find($id);
+        \DB::transaction(function () use($post, $request, $publish) {
 
-        $post->update([
-            'title' => $request->title,
-            'body' => $request->body,
-            'published' => $publish,
-        ]);
+            $post->update([
+                'title' => $request->title,
+                'body' => $request->body,
+                'published' => $publish,
+            ]);
 
-        $post->tags()->sync($request->tags);
+            $post->tags()->sync($request->tags);
+        
+        });
 
         return redirect('posts');
     }
@@ -121,14 +124,15 @@ class PostsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function deletar($id)
+    public function deletar(Post $post)
     {
-        $post = \App\Post::find($id);
-
         $post->delete();
 
-        \DB::table('tag_post')->where('post_id', '=', $post->id)->delete();
-
         return redirect('posts');
+    }
+    
+    public function ver($id){
+        $post = Post::find($id);
+        return view('posts.post', ['post' => $post]);
     }
 }

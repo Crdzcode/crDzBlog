@@ -8,6 +8,50 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
 
+ .select-dropdown{
+   background-color: inherit;
+ }
+
+ .select-dropdown>div>div>div{
+  background-color: rgb(41, 41, 41)!important;
+ }
+
+ .select-dropdown>div>div>div>ul{
+  background-color: rgb(41, 41, 41)!important;
+ }
+
+ .select-dropdown>div>div>div>ul>li{
+  background-color: rgb(41, 41, 41)!important;
+ }
+
+ .select-dropdown>div>div{
+  background-color: rgb(41, 41, 41)!important;
+ }
+
+ .custom-option:checked{
+  background-color: #111!important;
+  color: #2bc65e!important;
+}
+
+ .custom-option{
+  background-color: rgb(41, 41, 41)!important;
+  color: #2bc65e!important;
+ }
+
+ .custom-select{
+  background-color: rgb(41, 41, 41)!important;
+  color: #2bc65e!important;
+ }
+
+ table{
+   border-collapse: collapse!important;
+   table-layout: fixed!important;
+ }
+
+ tr{
+  border: 1px solid #2bc65e!important;
+ }
+
  .logout{
    font-weight: 700;
  }
@@ -17,22 +61,12 @@
    color: whitesmoke;
  }
 
- option:checked{
-   background-color: #111!important;
-   color: #2bc65e!important;
- }
-
  input{
    background-color: rgb(41, 41, 41)!important;
    color: #2bc65e!important;
  }
 
  textarea{
-  background-color: rgb(41, 41, 41)!important;
-  color: #2bc65e!important;
- }
-
- select{
   background-color: rgb(41, 41, 41)!important;
   color: #2bc65e!important;
  }

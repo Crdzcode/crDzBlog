@@ -10,6 +10,8 @@
                     <div class="card-body darkbg">
                         <form action="{{ route('salvarPost') }}" method="post">
                             {{ csrf_field() }}
+                            <input name="creator" type="hidden" value="{{auth()->user()->name}}">
+                            <input name="creator_id" type="hidden" value="{{auth()->user()->id}}">
                             <div class="form-group has-feedback{{ $errors->has('title') ? ' has-error' : '' }}">
                                 <label for="title" class="text-muted">Titulo</label>
                                 <input id="title" type="text" name="title" class="form-control">

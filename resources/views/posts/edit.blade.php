@@ -8,7 +8,7 @@
                     <div style="border-radius: 0;" class="card-header headers">Editar post</div>
 
                     <div class="card-body darkbg">
-                        <form action="{{ route('atualizarPost', ['id' => $post->id]) }}" method="post">
+                        <form action="{{ route('atualizarPost', ['post' => $post]) }}" method="post">
                             {{ csrf_field() }}
                             <div class="form-group has-feedback{{ $errors->has('title') ? ' has-error' : '' }}">
                                 <label for="title" class="text-muted">Titulo</label>
@@ -29,11 +29,11 @@
                                     </span>
                                 @endif
                             </div>
-                            <div class="form-group has-feedback{{ $errors->has('title') ? ' has-error' : '' }}">
+                            <div class="form-group select-dropdown has-feedback{{ $errors->has('title') ? ' has-error' : '' }}">
                                 <label for="tags" class="text-muted">Tags</label>
-                                <select id="tags" type="text" name="tags[]" multiple class="form-control">
+                                <select id="tags" type="text" name="tags[]" data-virtual-scroll='true' data-dropup-auto='false' multiple class="form-control selectpicker custom-select" data-style="custom-select">
                                     @foreach (\App\Tag::all() as $tag)
-                                        <option value="{{ $tag->id }}"
+                                        <option class="custom-option" value="{{ $tag->id }}"
                                             @if ($post->tags->contains($tag)) selected @endif>{{ $tag->name }}</option>
                                     @endforeach
                                 </select>
